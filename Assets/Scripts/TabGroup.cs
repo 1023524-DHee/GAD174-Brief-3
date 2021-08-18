@@ -5,12 +5,25 @@ using UnityEngine.UI;
 
 public class TabGroup : MonoBehaviour
 {
-    public List<TabButton> tabButtons;
-    public Sprite tabIdle, tabHover, tabActive;
-    public TabButton selectedTab;
-    public List<GameObject> objectsToSwap;
+    private bool panelIsUp;
+    private AudioSource audioSource;
 
-    public void Subscribe(TabButton button)
+    public List<TabButton> tabButtons;
+    public List<GameObject> objectsToSwap;
+    public TabButton selectedTab;
+    public Animator pageAnimator;
+
+    public AudioClip hoverClip, selectClip;
+
+	private void Start()
+	{
+        PlayerControls.current.onTabButtonPressed += TogglePanel;
+
+        audioSource = GetComponent<AudioSource>();
+        panelIsUp = false;
+	}
+
+	public void Subscribe(TabButton button)
     {
         if (tabButtons == null)
         {
@@ -22,9 +35,11 @@ public class TabGroup : MonoBehaviour
     public void OnTabEnter(TabButton button)
     {
         ResetTabs();
+        audioSource.clip = hoverClip;
+        audioSource.Play();
         if (selectedTab == null || button != selectedTab)
         {
-            button.background.sprite = tabHover;
+            button.background.sprite = button.tabHover;
         }
     }
 
@@ -37,7 +52,9 @@ public class TabGroup : MonoBehaviour
     {
         selectedTab = button;
         ResetTabs();
-        button.background.sprite = tabActive;
+        audioSource.clip = selectClip;
+        audioSource.Play();
+        button.background.sprite = button.tabActive;
 
         int index = button.transform.GetSiblingIndex();
         for (int ii = 0; ii < objectsToSwap.Count; ii++)
@@ -58,7 +75,21 @@ public class TabGroup : MonoBehaviour
         foreach (TabButton button in tabButtons)
         {
             if (selectedTab != null && button == selectedTab) { continue; }
-            button.background.sprite = tabIdle;
+            button.background.sprite = button.tabIdle;
+        }
+    }
+
+    public void TogglePanel()
+    {
+        panelIsUp = !panelIsUp;
+
+        if (!panelIsUp)
+        {
+            pageAnimator.SetTrigger("PanelDown");
+        }
+        else
+        {
+            pageAnimator.SetTrigger("PanelUp");
         }
     }
 }

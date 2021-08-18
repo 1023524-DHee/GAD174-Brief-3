@@ -10,17 +10,9 @@ public class OpenTab : MonoBehaviour
     void Start()
     {
         panelIsUp = false;
-
-        PlayerControls.current.onSpaceButtonPressed += TogglePanel;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void TogglePanel()
+    public void TogglePanel()
     {
         panelIsUp = !panelIsUp;
 

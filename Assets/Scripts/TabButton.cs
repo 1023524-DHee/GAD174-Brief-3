@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
     public TabGroup tabGroup;
-
+    public Sprite tabIdle, tabHover, tabActive;
     public Image background;
 
     // Start is called before the first frame update
